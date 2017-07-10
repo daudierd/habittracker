@@ -1,0 +1,11 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Top-level modules
+__main__.py
+habittracker.py
+
+# Configuration files
+*.conf
