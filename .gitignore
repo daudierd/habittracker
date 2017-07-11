@@ -9,3 +9,6 @@ habittracker.py
 
 # Configuration files
 *.conf
+
+# Executables
+*.exe
