@@ -12,6 +12,12 @@ Habitica tasks.
 The current tool is intended to Habitica users that train touch typing with Keybr.
 Notifications to the user are triggered in Windows 10.
 
+Requirements
+------------
+
+Please install Python 3 or higher and download the packages included in
+*requirements.txt* before running the script. It is required to download and
+place *phantomjs.exe* in the browser menu in order to run KeybrTracker
 
 Future improvements
 -------------------
