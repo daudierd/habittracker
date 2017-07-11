@@ -1,6 +1,6 @@
 #HabitTracker
 #Tracking tool for use with Habitica http://habitica.com
-#Author: Dorian Daudier <dorian.daudier@gmail.com>
+#Author: Dorian Daudier <ddaudier@outlook.com>
 #Version 1.0
 #License: GNU GPL v3 <www.gnu.org/licenses/gpl.html>
 
