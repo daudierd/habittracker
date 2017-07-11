@@ -8,7 +8,7 @@ HabitTracker is the successor of KeybrTracker: A project that aims at providing
 a set of tools to monitor various data sources and track for changes to score
 Habitica tasks.
 
-#Who does is it intended to?
+#### Who is it intended to?
 The current tool is intended to Habitica users that train touch typing with Keybr.
 Notifications to the user are triggered in Windows 10.
 
