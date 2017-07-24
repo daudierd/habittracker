@@ -16,48 +16,33 @@ class HabiticaApi():
     task_types = {"habits", "dailys", "todos", "rewards", "completedTodos"}
 
     def __init__(self):
-        """Initialize the API configuration and log in the API"""
+        """Initialize the API configuration"""
         self.authHeaders = {'x-api-user' : '', 'x-api-key' : ''}
         #Load configuration from file. If failure, create a new configuration
-        if not self.load_config():
-            self.configure()
+        if os.path.exists(config_file):
+            self.autologin()
 
-    def configure(self):
-        """Creates a new configuration file from user input and loads it"""
-        # Request information to create the new configuration file
-        user = input("Please enter your user ID: ")
-        key = input("Please enter your API key: ")
-        # Load the configuration
-        self.login(user, key)
-        # Write the configuration in the corresponding file
-        config = {'user' : user, 'key' : key}
-        try:
-            with open(config_file, 'w') as f:
-                f.write(json.dumps(config))
-        except:
-            logging.error("Configuration file could't be created")
-
-    def load_config(self):
-        """Retrieves the configuration file in json format.
-        If the configuration file cannot be found, 'False' is returned."""
-        try:
-            with open(config_file, 'r') as f:
-                config = f.read()
-                config = json.loads(config)
-        except:
-            logging.warning("Configuration file could't be loaded")
-            return False
-
-        if ('user' in config) and ('key' in config):
-            self.login(config['user'], config['key'])
-            return True
-        else:
-            return False
-
-    def login(self, user, key):
-        """Creates authentification headers 'authHeaders' used in the API"""
+    def login(self, user, key, auto_login=False):
+        """Creates authentification headers 'authHeaders' used in the API."""
+        if auto_login:
+            try:
+                with open(config_file, 'w') as f:
+                    f.write(json.dumps({'user' : user, 'key' : key}))
+            except:
+                logging.error("Configuration file could not be created.")
         self.authHeaders['x-api-user'] = user
         self.authHeaders['x-api-key'] = key
+        logging.info("User successfully logged in.")
+
+    def autologin(self):
+        """Logs a user in Habitica API using the configuration file
+        (created when the user specified to be logged in automatically)."""
+        try:
+            with open(config_file, 'r') as f:
+                data = json.loads(f.read())
+                self.login(data['user'], data['key'])
+        except:
+            raise LoginException("Login failed! Try login with a password")
 
     def score(self, task_id, msg="A task has been scored", direction='up'):
         """Scores a task given its ID for the authenticated user"""
