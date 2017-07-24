@@ -35,12 +35,12 @@ class KeybrApi():
         if auto_login:
             try:
                 with open(keybr_login, 'w') as f:
-                    f.write(json.dumps({'key' : auth}))
+                    f.write(json.dumps({'key' : key}))
             except:
                 logging.error("Configuration file could not be created.")
         loginURL = 'https://www.keybr.com/login/' + key
         self.browser.get(loginURL)
-        print("User is logged in.")
+        logging.info("User is logged in.")
 
     def autologin(self):
         """Logs a user in keybr using the configuration file
