@@ -14,9 +14,11 @@ def _str2seconds(string):
 
 class KeybrTracker(Tracker):
     """Class implementing a method to regularily check keybr training time."""
-    def __init__(self, task_id, habitica_api):
+    def __init__(self, task_id, habitica_api, keybr_login=None, auto_login=False):
         super().__init__(task_id, habitica_api)
         self.keybr_api = KeybrApi()
+        if keybr_login:
+            self.keybr_api.login(keybr_login, auto_login)
         # Set a training deadline triggering task update
         deadline = input("Please indicate a training time in hh:mm:ss format: ")
         self.deadline = _str2seconds(deadline)
