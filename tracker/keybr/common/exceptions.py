@@ -12,6 +12,17 @@ class KeybrException(Exception):
         exception_msg = "Message: %s\n" % self.msg
         return exception_msg
 
+class LoginException(KeybrException):
+    """Triggered when the user isn't logged in of fails to log in"""
+
+    def __init__(self, msg=None):
+        self.msg = msg
+
+    def __str__(self):
+        exception_msg = "Message: %s\n" % self.msg
+        return exception_msg
+
+
 class TimeoutException(KeybrException):
     """Triggered when keybr website takes too long to reach the database"""
 

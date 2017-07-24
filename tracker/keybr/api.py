@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
+from .common.exceptions import LoginException
 from .common.exceptions import TimeoutException as KeybrTimeoutException
 
 root_dir = os.path.split(os.path.split(
@@ -16,52 +17,40 @@ phantomjs_path = os.path.join(
                     os.path.join(root_dir, 'browser'),
                     'phantomjs.exe')
 # load the configuration file
-config_file = os.path.join(os.path.dirname(__file__), 'keybr.conf')
+keybr_login = os.path.join(os.path.dirname(__file__), 'keybr.conf')
 
 class KeybrApi():
     """Class providing methods for logging and fetching typing data on Keybr"""
     browser = webdriver.PhantomJS(executable_path=phantomjs_path)
+
     def __init__(self):
-        #Load configuration from file. If failure, create a new configuration
         self.timeout = 10
         self.indicators = None
-        if not self.load_config():
-            self.configure()
+        # If a file exists for auto-login, log the user in
+        if os.path.exists(keybr_login):
+            self.autologin()
 
-    def configure(self):
-        """Creates a new configuration file from user input and loads it"""
-        # Request information to create the new configuration file
-        key = input("Please enter your login key (last part of sign-in link " \
-                    "https://www.keybr.com/login/[key]): ")
-        # Load the configuration
-        self.login(key)
-        # Write the configuration in the corresponding file
-        config = {'key' : key}
-        try:
-            with open(config_file, 'w') as f:
-                f.write(json.dumps(config))
-        except:
-            logging.error("Configuration file could not be created")
-
-    def load_config(self):
-        """Retrieves the configuration file in json format.
-        If the configuration file cannot be found, 'False' is returned."""
-        try:
-            with open(config_file, 'r') as f:
-                config = f.read()
-                config = json.loads(config)
-        except:
-            logging.warning("Configuration file could't be loaded")
-
-        if 'key' in config:
-            self.login(config['key'])
-            return True
-        return False
-
-    def login(self, key):
-        """Logs a user on keybr with the key provided in the sign-in link"""
+    def login(self, key, auto_login=False):
+        """Logs a user in keybr with the key provided in the sign-in link."""
+        if auto_login:
+            try:
+                with open(keybr_login, 'w') as f:
+                    f.write(json.dumps({'key' : auth}))
+            except:
+                logging.error("Configuration file could not be created.")
         loginURL = 'https://www.keybr.com/login/' + key
         self.browser.get(loginURL)
+        print("User is logged in.")
+
+    def autologin(self):
+        """Logs a user in keybr using the configuration file
+        (created when the user specified to be logged in automatically)."""
+        try:
+            with open(keybr_login, 'r') as f:
+                data = json.loads(f.read())
+                self.login(data['key'])
+        except:
+            raise LoginException("Login failed! Try login with a password")
 
     def get_indicators(self):
         """Loads and returns a dictionary containting the data of the indicators
