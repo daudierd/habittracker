@@ -60,7 +60,7 @@ class HabiticaApi():
         out = json.loads(str(r, 'utf-8'))
         if out['success']: notify(msg)
 
-    def get_tasks(self, task_type=""):
+    def get_user_tasks(self, task_type=""):
         """Returns an array of tasks with the attributes defined in the API.
         Tasks can optionally be filtered by type"""
         url = 'https://habitica.com/api/v3/tasks/user'
@@ -80,3 +80,42 @@ class HabiticaApi():
 
         out = json.loads(emoji2text(str(r, 'utf-8')))
         return out['data']
+
+    def get_task(self, task_id):
+        """Returns a task object in JSON format, specified with task_id"""
+        url = 'https://habitica.com/api/v3/tasks/' + task_id
+        q = urllib.request.Request(url, headers=self.authHeaders, method='GET')
+        try:
+            r = urllib.request.urlopen(q).read()
+        except HTTPError as e:
+            if e.getcode() == 400:    #BadRequest
+                raise(ParameterException(
+                        msg="Couldn't the task object with id " + task_id,
+                        expected_params=list(self.task_types)))
+            elif e.getcode() == 401:  #NotAuthorized
+                raise(LoginException)
+
+        out = json.loads(emoji2text(str(r, 'utf-8')))
+        return out['data']
+
+    def update_notes(self, task_id, notes):
+        """Updates the notes of the specified task with 'notes' argument."""
+        url = 'https://habitica.com/api/v3/tasks/' + task_id
+        # Add the notes as a body parameter and add a Content-Type header
+        data = json.dumps({'notes' : notes})
+        headers = self.authHeaders
+        headers['Content-Type'] = 'application/json'
+        # Perform the update request
+        q = urllib.request.Request(url, data=data.encode(),headers=headers,method='PUT')
+        try:
+            r = urllib.request.urlopen(q).read()
+        except HTTPError as e:
+            if e.getcode() == 404:    #NotFound
+                #TO DO
+                raise(Exception)
+            elif e.getcode() == 401:  #NotAuthorized
+                raise(LoginException)
+
+        out = json.loads(str(r, 'utf-8'))
+        if out['success']:
+            logging.info("Task notes were successfully updated")
