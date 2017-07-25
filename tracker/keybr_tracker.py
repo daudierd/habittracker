@@ -2,11 +2,13 @@ import os
 import json
 import logging
 import time
+from datetime import datetime
 
 from .tracker import Tracker
 from ..keybr.api import KeybrApi
 from ..keybr.common.exceptions import TimeoutException
 
+timedate_format = '%Y-%m-%d %H:%M:%S'
 # converts a 'hh:mm:ss' string into an int representing the number of seconds
 def _str2seconds(string):
     time = string.split(':')
@@ -63,6 +65,22 @@ class KeybrTracker(Tracker):
         self.task_update()
 
     def task_update(self):
-        self.habitica_api.score(
-            self.task_id,
+        ha = self.habitica_api
+        now = datetime.now()
+        task_notes = ha.get_task(self.task_id)['notes']
+        if task_notes:
+            task_notes = json.loads(task_notes)
+            if 'last_update' in task_notes:
+                # get the last update time and compare it to now
+                last_update = task_notes['last_update']
+                last_update = datetime.strptime(last_update, timedate_format)
+                if (last_update.day == now.day):
+                    logging.info("The task was already scored earlier today.")
+                    return
+
+        new_notes = json.dumps({
+            'last_update': now.strftime('%Y-%m-%d %H:%M:%S'),
+            'deadline' : self.deadline})
+        ha.update_notes(self.task_id, new_notes)
+        ha.score(self.task_id,
             'Your have reached your target training time for today')
