@@ -11,8 +11,7 @@ from selenium.common.exceptions import TimeoutException
 from .common.exceptions import LoginException
 from .common.exceptions import TimeoutException as KeybrTimeoutException
 
-root_dir = os.path.split(os.path.split(
-                os.path.split(os.path.abspath(__file__))[0])[0])[0]
+root_dir = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]
 phantomjs_path = os.path.join(
                     os.path.join(root_dir, 'browser'),
                     'phantomjs.exe')
@@ -20,7 +19,7 @@ phantomjs_path = os.path.join(
 keybr_login = os.path.join(os.path.dirname(__file__), 'keybr.conf')
 
 class KeybrApi():
-    """Class providing methods for logging and fetching typing data on Keybr"""
+    """Class providing methods for logging in & fetching typing data on Keybr"""
     browser = webdriver.PhantomJS(executable_path=phantomjs_path)
 
     def __init__(self):
@@ -40,7 +39,7 @@ class KeybrApi():
                 logging.error("Configuration file could not be created.")
         loginURL = 'https://www.keybr.com/login/' + key
         self.browser.get(loginURL)
-        logging.info("User is logged in.")
+        logging.info("User is logged in." )
 
     def autologin(self):
         """Logs a user in keybr using the configuration file

@@ -4,8 +4,8 @@ import logging
 import time
 
 from .tracker import Tracker
-from .keybr.api import KeybrApi
-from .keybr.common.exceptions import TimeoutException
+from ..keybr.api import KeybrApi
+from ..keybr.common.exceptions import TimeoutException
 
 # converts a 'hh:mm:ss' string into an int representing the number of seconds
 def _str2seconds(string):
@@ -13,12 +13,18 @@ def _str2seconds(string):
     return (int(time[0]) * 60 + int(time[1])) * 60 + int(time[2])
 
 class KeybrTracker(Tracker):
-    """Class implementing a method to regularily check keybr training time."""
-    def __init__(self, task_id, habitica_api, keybr_login=None, auto_login=False):
+    """
+    Class implementing a method to regularily check keybr training time using
+    Keybr API and trigger a task update with Habitica API.
+
+    Arguments:
+        task_id: ID of the Habitica task that is updated by the tracker
+        habitica_api: A reference to the Habitica API
+        keybr_api : A reference to the Keybr API
+    """
+    def __init__(self, task_id, habitica_api, keybr_api):
         super().__init__(task_id, habitica_api)
-        self.keybr_api = KeybrApi()
-        if keybr_login:
-            self.keybr_api.login(keybr_login, auto_login)
+        self.keybr_api = keybr_api
         # Set a training deadline triggering task update
         deadline = input("Please indicate a training time in hh:mm:ss format: ")
         self.deadline = _str2seconds(deadline)

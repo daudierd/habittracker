@@ -12,6 +12,7 @@ The current tool track touch typing training time with Keybr website.
 """
 
 from .habitica.api import HabiticaApi
+from .keybr.api import KeybrApi
 from .tracker.keybr_tracker import KeybrTracker
 
 # Please configure the following values before running the script
@@ -29,7 +30,11 @@ if not task_id:
           "Keybr tracker.\nIf you don't want to enter it every time, you can " \
           "edit the __main__.py file.")
     task_id =  input("Task ID: ")
-kt = KeybrTracker(task_id, ha, keybr_login=keybr_key)
+
+keybr_api = KeybrApi()
+keybr_api.login(keybr_key)
+kt = KeybrTracker(task_id, ha, keybr_api=keybr_api)
+
 print("Starting training...")
 kt.start()
 
