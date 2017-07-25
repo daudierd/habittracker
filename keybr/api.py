@@ -23,7 +23,6 @@ class KeybrApi():
     browser = webdriver.PhantomJS(executable_path=phantomjs_path)
 
     def __init__(self):
-        self.timeout = 10
         self.indicators = None
         # If a file exists for auto-login, log the user in
         if os.path.exists(keybr_login):
@@ -51,13 +50,18 @@ class KeybrApi():
         except:
             raise LoginException("Login failed! Try login with a password")
 
-    def get_indicators(self):
-        """Loads and returns a dictionary containting the data of the indicators
+    def get_indicators(self, timeout=10):
+        """
+        Loads and returns a dictionary containting the data of the indicators
         displayed on the website's 'profile' page. If the function fails, the
-        old indicators values are retained."""
+        old indicators values are retained.
+
+        Arguments:
+            timeout (optional): timeout (in sec) for fetching the indicators.
+                If no timeout is specified, the default value of 10sec is used"""
         self.browser.get('https://www.keybr.com/profile/')
         try:
-            WebDriverWait(self.browser, self.timeout).until(
+            WebDriverWait(self.browser, timeout).until(
                 EC.presence_of_element_located((By.CLASS_NAME, 'Indicator-value'))
                 )
         except TimeoutException:

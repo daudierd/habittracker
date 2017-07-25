@@ -34,12 +34,14 @@ class KeybrTracker(Tracker):
         """Synchronize the data stored in the program with data online.
         The time until next sync is updated in 'wait_time' attribute"""
         updated = False
+        timeout = 10
         while not updated:
             try:
-                self.indicators = self.keybr_api.get_indicators()
+                self.indicators = self.keybr_api.get_indicators(timeout=timeout)
                 updated = True
             except TimeoutException as e:
                 logging.warning(e)
+                timeout = min(timeout * 2, 60)
                 continue
 
     def condition(self):
