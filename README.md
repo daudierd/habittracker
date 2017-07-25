@@ -1,7 +1,7 @@
 KeybrTracker (HabitTracker)
 ===========================
 
-KeybrTracker is an automation tool for ![Habitica](https://habitica.com/) that
+KeybrTracker is an automation tool for [Habitica](https://habitica.com/) that
 automatically scores a task when a Keybr user has reached a certain target time.
 
 HabitTracker is the successor of KeybrTracker: A project that aims at providing
@@ -23,8 +23,6 @@ Future improvements
 -------------------
 
 Here are some of the improvements that will be included in future versions:
-* Store an history of the past task scores to avoid scoring tasks several times
-when the user quits the tool and runs it again
 * Enable multithreading to enable parallel tracking activities
 * Provide the possibility for a user to choose whether to store credentials or not
 * Secure the credentials stored in configuration files
