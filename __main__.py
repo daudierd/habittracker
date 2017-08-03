@@ -11,31 +11,46 @@ Automation tool designed to track user activities and score habitica tasks.
 The current tool track touch typing training time with Keybr website.
 """
 
+import argparse
+
 from .habitica.api import HabiticaApi
 from .keybr.api import KeybrApi
 from .tracker.keybr_tracker import KeybrTracker
 
-# Please configure the following values before running the script
-task_id = ''
-habitica_user = ''
-habitica_key = ''
-keybr_key = ''
+# Create parser for command-line arguments
+parser = argparse.ArgumentParser(
+    description='Score Keybr typing sessions on Habitica.')
 
-ha = HabiticaApi()
-ha.login(habitica_user, habitica_key)
+# Use 2 positional arguments for standard program run
+parser.add_argument('taskID', metavar='TID', nargs='?',
+                    help="task ID associated with the Keybr Tracker")
+parser.add_argument('time', metavar='T', type=int, nargs='?',
+                    help="training session time (in minutes)")
 
-print("\nKEYBR TRACKER:")
-if not task_id:
-    print("Please enter the ID of the task you would like to score with " \
-          "Keybr tracker.\nIf you don't want to enter it every time, you can " \
-          "edit the __main__.py file.")
-    task_id =  input("Task ID: ")
+# Configuration flag can be specified.
+# In this case, 3 arguments are expected.
+parser.add_argument('-c', '--configure', action='store_true',
+                    help="configure the program")
+parser.add_argument('ha_user', nargs='?',
+                    help="Habitica user ID.")
+parser.add_argument('ha_key', nargs='?',
+                    help="Habitica API key.")
+parser.add_argument('keybr', nargs='?',
+                    help="Keybr login key.")
 
+habitica_api = HabiticaApi()
 keybr_api = KeybrApi()
-keybr_api.login(keybr_key)
-kt = KeybrTracker(task_id, ha, keybr_api=keybr_api)
+args = parser.parse_args()
 
-print("Starting training...")
-kt.start()
+if args.configure:
+    habitica_api.login(args.ha_user, args.ha_key, auto_login=True)
+    keybr_api.login(args.keybr, auto_login=True)
+    print("KeybrTracker successfully configured")
+else:
+    # We assume the program is already configured
+    kt = KeybrTracker(args.taskID, args.time, habitica_api, keybr_api)
+    print("Starting training for " + str(args.time) + " minutes...")
+    kt.start()
+    print("Keybr training ended.")
 
-input("Keybr tracking ended.\nPress Enter to exit...")
+input("Press Enter to exit...")
