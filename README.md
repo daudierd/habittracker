@@ -19,6 +19,15 @@ Please install Python 3 or higher and download the packages included in
 *requirements.txt* before running the script. It is required to download and
 place *phantomjs.exe* in the browser menu in order to run KeybrTracker
 
+Configure & run KeybrTracker
+----------------------------
+
+The main program (in habittracker module) can be configured with the following command:
+    python -m habittracker -c <Habitica UserID> <Habitica API key> <Keybr login>
+
+To run the program, use the following:
+    python -m habittracker <Task ID> <training time (in minutes)>
+
 Future improvements
 -------------------
 
