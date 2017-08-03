@@ -23,9 +23,11 @@ Configure & run KeybrTracker
 ----------------------------
 
 The main program (in habittracker module) can be configured with the following command:
+
     python -m habittracker -c <Habitica UserID> <Habitica API key> <Keybr login>
 
 To run the program, use the following:
+
     python -m habittracker <Task ID> <training time (in minutes)>
 
 Future improvements
