@@ -4,8 +4,10 @@ __pycache__/
 *$py.class
 
 # Top-level modules
-__main__.py
 habittracker.py
+
+# My modules
+my_*.py
 
 # Configuration files
 *.conf
