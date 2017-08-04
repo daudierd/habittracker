@@ -24,8 +24,8 @@ class KeybrTracker(Tracker):
         habitica_api: A reference to the Habitica API
         keybr_api : A reference to the Keybr API
     """
-    def __init__(self, task_id, minutes, habitica_api, keybr_api):
-        super().__init__(task_id, habitica_api)
+    def __init__(self, name, task_id, minutes, habitica_api, keybr_api):
+        super().__init__(name, task_id, habitica_api)
         self.keybr_api = keybr_api
         # Set a training deadline triggering task update
         self.deadline = minutes * 60
@@ -51,7 +51,7 @@ class KeybrTracker(Tracker):
         cond = _str2seconds(self.indicators['today']['time']) >= self.deadline
         return (cond)
 
-    def start(self):
+    def run(self):
         """Regularily syncs and triggers task score when condition is reached"""
         # indicators and remaining time initialized to avoid unnecessary loops
         logging.info("Tracking started")

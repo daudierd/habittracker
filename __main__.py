@@ -48,9 +48,10 @@ if args.configure:
     print("KeybrTracker successfully configured")
 else:
     # We assume the program is already configured
-    kt = KeybrTracker(args.taskID, args.time, habitica_api, keybr_api)
-    print("Starting training for " + str(args.time) + " minutes...")
+    kt = KeybrTracker("Keybr-tracker", args.taskID, args.time, habitica_api, keybr_api)
     kt.start()
+    print("Starting training for " + str(args.time) + " minutes...")
+    kt.join()
     print("Keybr training ended.")
 
 input("Press Enter to exit...")
