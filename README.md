@@ -34,7 +34,6 @@ Future improvements
 -------------------
 
 Here are some of the improvements that will be included in future versions:
-* Enable multithreading to enable parallel tracking activities
 * Provide the possibility for a user to choose whether to store credentials or not
 * Secure the credentials stored in configuration files
 * Add notifications support for other platforms
